@@ -1,4 +1,6 @@
 # mongoose-hw
+
+TODO: There is a bug where comments aren't saved when more than one comment box is open. need to fix this.
 Check it out at https://superfuturescraper.herokuapp.com/
 UI is simple: user is presented with a button to scrape for new articles, and a list of current posts that are already in the DB. 
 * Click one of the images and it will show any notes/comments that others have left on that specific article.
