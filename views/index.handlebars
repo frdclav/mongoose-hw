@@ -1,0 +1,16 @@
+<div class="border-light col-md-12" id="articles">
+  {{#each articles}}
+  <div class="article card border-0 col-sm d-flex" id="{{_id}}">
+    <div class="card-body">
+      <img id='{{_id}}-img' comment-state='closed' data-id='{{_id}}' src='{{imageUrl}}' style='max-width:300px'>
+      <a href='{{link}}'>
+        <h3>{{title}}</h3>
+
+
+      </a>
+      <p>{{articleDate}}</p>
+    </div>
+  </div>
+
+  {{/each}}
+</div>
