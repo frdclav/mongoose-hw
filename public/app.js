@@ -30,9 +30,9 @@ $(document).on("click", "img", function () {
         // add html for form -- why did i do this as a string? i don't know, can be cleaned up
         commentTitleFormGroup.html(`
 <label for="titleinput"> Post a comment.</label>
-<input type="text" class="form-control" id = 'titleinput' placeholder="Comment Title">`);
+<input type="text" class="form-control" id = 'titleinput${data[0]._id}' placeholder="Comment Title">`);
         commentBodyFormGroup.html(`
-<input type="textarea" class="form-control" id = 'bodyinput' placeholder="Comment Body">`);
+<input type="textarea" class="form-control" id = 'bodyinput${data[0]._id}' placeholder="Comment Body">`);
 
         // append commentForm things
         commentForm.append(commentTitleFormGroup);
@@ -51,9 +51,10 @@ $(document).on("click", "img", function () {
           var arr = data[0].note
           arr.forEach(element => {
             var pastComments = $("<div class='m-4'>")
+            var commentDeleteBtn = $(`<button class='btn btn-sm btn-light  rounded-0 deletenote ' data-id='${element._id}' >`).text('deletethiscomment.');
             var pastCommentsTitle = $("<h6>").text(`${element.title}`);
             var pastCommentsBody = $("<p>").text(`${element.body}`);
-            pastComments.append($("<hr>"), pastCommentsTitle, pastCommentsBody, $("<hr>"))
+            pastComments.append($("<hr>"), pastCommentsTitle, pastCommentsBody, commentDeleteBtn, $("<hr>"))
             noteDivCardBody.append(pastComments)
           });
 
@@ -93,15 +94,16 @@ $(document).on("click", ".savenote", function () {
   var thisId = $(this).attr("data-id");
   console.log(thisId, $(this).attr("data-id"));
 
+
   // Run a POST request to change the note, using what's entered in the inputs
   $.ajax({
     method: "POST",
     url: "/articles/" + thisId,
     data: {
       // Value taken from title input
-      title: $("#titleinput").val(),
+      title: $(`#titleinput${thisId}`).val(),
       // Value taken from note textarea
-      body: $("#bodyinput").val()
+      body: $(`#bodyinput${thisId}`).val()
     }
   })
     // With that done
@@ -110,7 +112,35 @@ $(document).on("click", ".savenote", function () {
       console.log(data);
     });
 
+
+
   // Also, remove the values entered in the input and textarea for note entry -- needs to be fixed, would mess with all open comment forms -- but whos commenting on multiple articles at the same time? :shrug:
   $("#titleinput").val("");
   $("#bodyinput").val("");
+});
+
+// When you click the deletenote button
+$(document).on("click", ".deletenote", function () {
+  // Grab the id associated with the article from the submit button
+  var thisId = $(this).attr("data-id");
+  // console.log(thisId, $(this).attr("data-id"));
+
+
+  // Run a POST request to change the note, using what's entered in the inputs
+  $.ajax({
+    method: "DELETE",
+    url: "/note/" + thisId,
+    data: {
+      // comment _id
+      _id: thisId
+    }
+  })
+    // With that done
+    .then(function (data) {
+      // Log the response
+      console.log(data);
+      window.location.reload()
+    });
+
+
 });
